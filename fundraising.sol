@@ -20,6 +20,10 @@ contract FundRaising {
     
     Request[] public requests;
     
+    event ContributeEvent(address sender, uint value);
+    event CreateRequestEvent(string _description, address _recipient, uint _value);
+    event MakePaymentEvent(address receipient, uint value);
+    
     constructor(uint _goal, uint _deadline) public {
         goal = _goal;
         deadline = now + _deadline;
@@ -43,6 +47,7 @@ contract FundRaising {
             noOfVoters: 0
         });
         requests.push(newRequest);
+        emit CreateRequestEvent(_description, _recipient, _value);
     }
     
     function voteRequest(uint index) public {
@@ -63,6 +68,7 @@ contract FundRaising {
         thisRequest.recipient.transfer(thisRequest.value); // Transfer money to the recipient
         
         thisRequest.completed = true;
+        emit MakePaymentEvent(thisRequest.recipient, thisRequest.value);
     }
     
     function contribute() public payable {
@@ -74,6 +80,8 @@ contract FundRaising {
         
         contributors[msg.sender] += msg.value;
         raisedAmount += msg.value;
+        
+        emit ContributeEvent(msg.sender, msg.value);
     }
     
     function getBalance() public view returns(uint) {
