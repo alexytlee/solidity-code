@@ -1,10 +1,19 @@
 pragma solidity ^0.4.24;
 
+contract AuctionCreator {
+    address[] public auctions;
+    
+    function createAuction() public {
+        address newAuction = new Auction(msg.sender);
+        auctions.push(newAuction);
+    }
+}
+
 contract Auction {
     address public owner;
     uint public startBlock;
     uint public endBlock;
-    string public ipfsHash;
+    string public ipfsHash; 
     
     enum State {
         Started,
@@ -22,8 +31,8 @@ contract Auction {
     
     uint bidIncrement;
     
-    constructor() public {
-        owner = msg.sender;
+    constructor(address creator) public {
+        owner = creator;
         auctionState = State.Running;
         
         startBlock = block.number;
