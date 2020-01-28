@@ -14,5 +14,18 @@ contract('ItemManager', accounts => {
 			}
 		);
 		console.log(result);
+		assert.equal(
+			result.logs[0].args._itemIndex,
+			0,
+			"It's not the first item"
+		);
+
+		const item = await ItemManagerInstance.items(0);
+		console.log(item);
+		assert.equal(
+			item._identifier,
+			itemName,
+			'The identifier was different'
+		);
 	});
 });
